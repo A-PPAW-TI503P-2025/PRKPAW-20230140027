@@ -2,8 +2,8 @@ exports.addUserData = (req, res, next) => {
     console.log("Middleware: Menambahkan data user ke tiruan (dummy)..");
     req.user = {
         id: 123,
-        name: "Sugeng",
-        role: "karyawan"
+        nama: "Kevin Adrian Fidel",
+        role: "admin"
     };
     next();
 }
