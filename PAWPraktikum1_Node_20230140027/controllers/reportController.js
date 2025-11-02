@@ -1,35 +1,38 @@
-// <--- 1. IMPOR MODEL ANDA
-// Pastikan Anda mengimpor model dari database
-// Sesuaikan nama 'Presensi' jika nama file model Anda berbeda
-const { Presensi } = require('../models');
+const { Presensi } = require("../models");
+const { Op } = require("sequelize");
 
-// <--- 2. UBAH MENJADI FUNGSI 'async'
-// Kita butuh 'async' agar bisa menggunakan 'await' untuk operasi database
 exports.getDailyReport = async (req, res) => {
-  
-  // <--- 3. GUNAKAN BLOK 'try...catch'
-  // Ini SANGAT PENTING untuk menangani error jika database gagal
   try {
-    
-    console.log("Controller: Mengambil data laporan harian dari DATABASE...");
-    
-    // <--- 4. DEFINISIKAN 'presensiRecords'
-    // Ini adalah baris yang hilang.
-    // Kita mengambil SEMUA data dari tabel 'Presensi'
-    const presensiRecords = await Presensi.findAll();
+    const { nama, tanggalMulai, tanggalSelesai } = req.query;
+    let options = { where: {} };
 
-    // Kirim respon JSON setelah data berhasil diambil
+    if (nama) {
+      options.where.nama = {
+        [Op.like]: `%${nama}%`,
+      };
+    }
+
+    if (tanggalMulai && tanggalSelesai) {
+      const startDate = new Date(tanggalMulai);
+      startDate.setHours(0, 0, 0, 0);
+
+      const endDate = new Date(tanggalSelesai);
+      endDate.setHours(23, 59, 59, 999);
+
+      options.where.checkIn = {
+        [Op.between]: [startDate, endDate],
+      };
+    }
+
+    const records = await Presensi.findAll(options);
+
     res.json({
-      reportDate: new Date().toLocaleDateString(), // Sesuai gambar asli
-      data: presensiRecords,
+      reportDate: new Date().toLocaleDateString(),
+      data: records,
     });
-
   } catch (error) {
-    // Blok ini akan menangkap error jika 'await Presensi.findAll()' gagal
-    console.error("Error saat mengambil data dari database:", error);
-    res.status(500).json({ 
-      message: "Terjadi kesalahan pada server saat mengambil laporan harian.",
-      error: error.message 
-    });
+    res
+      .status(500)
+      .json({ message: "Gagal mengambil laporan", error: error.message });
   }
 };
