@@ -1,0 +1,8 @@
+LOGIN
+![LOGIN](<SS TUGAS 7/Login.png>)
+
+REGISTER
+![REGISTER](<SS TUGAS 7/Register.png>)
+
+DASHBOARD
+![DASHBOARD](<SS TUGAS 7/Dashboard.png>)
