@@ -1,14 +1,26 @@
-const { Presensi } = require("../models");
+const { Presensi, User } = require("../models"); // Tambahkan User
 const { Op } = require("sequelize");
 
 exports.getDailyReport = async (req, res) => {
   try {
     const { nama, tanggalMulai, tanggalSelesai } = req.query;
-    let options = { where: {} };
+    let options = { 
+      where: {},
+      include: [{ 
+        model: User, 
+        attributes: ['nama'] // Ambil hanya kolom nama dari tabel User
+      }],
+      order: [['checkIn', 'DESC']] // Urutkan dari yang terbaru
+    };
 
+    // Filter berdasarkan Nama User (Pencarian)
     if (nama) {
-      options.where.nama = {
-        [Op.like]: `%${nama}%`,
+      // Karena nama ada di tabel User, kita filter di dalam include atau gunakan logic khusus.
+      // Namun untuk simplifikasi Sequelize standar, filter nama di tabel asosiasi agak kompleks.
+      // Untuk saat ini kita filter record presensi-nya saja, atau biarkan fitur search ini sementara.
+      // Jika ingin search nama user, logic-nya harus pindah ke dalam block include.
+      options.include[0].where = {
+        nama: { [Op.like]: `%${nama}%` }
       };
     }
 
@@ -31,8 +43,7 @@ exports.getDailyReport = async (req, res) => {
       data: records,
     });
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Gagal mengambil laporan", error: error.message });
+    console.error(error);
+    res.status(500).json({ message: "Gagal mengambil laporan", error: error.message });
   }
 };

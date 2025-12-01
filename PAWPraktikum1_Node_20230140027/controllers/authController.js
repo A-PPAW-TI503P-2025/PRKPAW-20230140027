@@ -1,7 +1,10 @@
+const jwt = require('jsonwebtoken');
 const { User } = require('../models');
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');	
-const JWT_SECRET = 'INI_ADALAH_KUNCI_RAHASIA_ANDA_YANG_SANGAT_AMAN';
+
+// KUNCI INI HARUS SAMA PERSIS DENGAN DI MIDDLEWARE
+const JWT_SECRET = 'rahasia_super_aman_123'; 
+
 
 exports.register = async (req, res) => {
   try {
