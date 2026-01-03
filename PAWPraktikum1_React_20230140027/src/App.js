@@ -5,6 +5,9 @@ import RegisterPage from "./components/RegisterPage";
 import DashboardPage from "./components/DashboardPage";
 import AttendancePage from "./components/AttendancePage";
 import ReportPage from "./components/ReportPage";
+// --- TAMBAHAN IMPORT ---
+import SensorPage from "./components/SensorPage"; 
+// -----------------------
 import Navbar from "./components/Navbar";
 import "leaflet/dist/leaflet.css";
 
@@ -48,6 +51,18 @@ function App() {
               </MainLayout>
             }
           />
+          
+          {/* --- TAMBAHAN ROUTE MONITORING --- */}
+          <Route
+            path="/monitoring"
+            element={
+              <MainLayout>
+                <SensorPage />
+              </MainLayout>
+            }
+          />
+          {/* --------------------------------- */}
+
           <Route path="/" element={<LoginPage />} />
         </Routes>
       </div>
